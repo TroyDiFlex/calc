@@ -45,8 +45,10 @@ const clear = () => {
   updateUI();
 };
 
-const updateUI = () => {
-  if (result) {
+const updateUI = (message) => {
+  if (message) {
+    displayed = message;
+  } else if (result) {
     displayed = first + oper + second + "=" + result;
   } else {
     displayed = first + oper + second;
@@ -56,6 +58,10 @@ const updateUI = () => {
 
 numbers.addEventListener("click", (e) => {
   if (e.target !== numbers) {
+    if (result) {
+      clear();
+      updateUI();
+    }
     switch (currentMode) {
       case "firstMode":
         first += e.target.textContent;
@@ -92,8 +98,15 @@ controls.addEventListener("click", (e) => {
   if (e.target !== controls) {
     switch (e.target.textContent) {
       case "=":
-        result = calc();
-        updateUI();
+        if (oper === "/" && second == 0) {
+          console.log(result);
+          updateUI("Брад, на ноль делить нельзя");
+          break;
+        }
+        if (second) {
+          result = calc();
+          updateUI();
+        }
         break;
       case "C":
         clear();
